@@ -2,10 +2,11 @@
 
 html, body {
   margin: 0;
-  height: 100%;
+  padding: 0;
   background: #151517;
   -webkit-user-select: none;
   user-select: none;
+  height: 100%;
 }
 
 body {
@@ -13,9 +14,9 @@ body {
   color: #e8e8e8;
   font-size: 20px;
   line-height: 1.6;
-  min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;          /* было overflow: hidden — убрали, чтобы разрешить прокрутку */
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 button { font-family: inherit; }
@@ -25,16 +26,31 @@ button { font-family: inherit; }
   display: none;
   position: absolute;
   inset: 0;
+  height: 100%;
+  height: 100dvh;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.screen.active { display: flex; }
+
+/* Прокручиваемая область карточки */
+.card-scroll {
+  flex: 1;
+  width: 100%;
+  max-width: 640px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 24px;
-  padding-bottom: 140px;        /* место под фиксированные кнопки внизу */
-  box-sizing: border-box;
-  overflow-y: auto;             /* прокрутка контента, если не помещается */
-  -webkit-overflow-scrolling: touch;
+  padding-top: 56px;
+  padding-bottom: 8px;
 }
-.screen.active { display: flex; }
 
 /* ---------- Кнопки ---------- */
 .btn {
@@ -97,6 +113,7 @@ button { font-family: inherit; }
   text-align: center;
   pointer-events: none;
   user-select: none;
+  margin: auto;
 }
 
 /* ---------- Счётчик ---------- */
@@ -123,6 +140,7 @@ button { font-family: inherit; }
   align-items: center;
   width: 100%;
   max-width: 360px;
+  margin: auto 0;
 }
 .create-buttons .btn { width: 100%; }
 
@@ -133,6 +151,7 @@ button { font-family: inherit; }
   display: flex;
   flex-direction: column;
   gap: 14px;
+  margin: auto 0;
 }
 
 #editorText {
@@ -238,6 +257,7 @@ button { font-family: inherit; }
   padding-right: 4px;
   scrollbar-width: thin;
   scrollbar-color: #2f2f33 transparent;
+  margin: auto 0;
 }
 .decks-list::-webkit-scrollbar { width: 8px; }
 .decks-list::-webkit-scrollbar-track { background: transparent; }
@@ -329,21 +349,22 @@ button { font-family: inherit; }
   font-size: 15px;
   color: #8a8a90;
   pointer-events: none;
+  z-index: 50;
 }
 
-/* ---------- Нижняя панель кнопок — FIXED, всегда видна ---------- */
+/* ---------- Нижняя панель кнопок — FIXED, вне .screen ---------- */
 .button-area {
   position: fixed;
   left: 0;
   right: 0;
   bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-  display: flex;
+  display: none;
   justify-content: center;
   gap: 20px;
   padding: 0 16px;
   z-index: 90;
 }
-.button-area > * { pointer-events: auto; }
+.button-area.active { display: flex; }
 
 #answer-buttons {
   display: none;
@@ -403,10 +424,10 @@ button { font-family: inherit; }
 
   .screen {
     padding: 16px;
-    padding-bottom: 130px;      /* место под фиксированные кнопки */
-    justify-content: flex-start; /* контент сверху, прокручивается */
-    padding-top: 70px;           /* место под счётчик */
+    padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px));
   }
+
+  .card-scroll { padding-top: 48px; }
 
   .counter { font-size: 17px; top: calc(16px + env(safe-area-inset-top, 0px)); }
   .bg-text { font-size: 19px; }
@@ -429,7 +450,7 @@ button { font-family: inherit; }
   .study-divider { margin: 18px auto; width: 240px; }
 
   .button-area {
-    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     gap: 12px;
     padding: 0 12px;
   }
