@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Формула</title>
 
 <script>
@@ -24,7 +24,7 @@
     <button class="circle-btn corner-br" id="addBtn" title="Добавить">+</button>
   </div>
 
-  <!-- ================= ЭКРАН 2: редактор карточек (создание/изменение) ================= -->
+  <!-- ================= ЭКРАН 2: редактор карточек ================= -->
   <div class="screen" id="screenEditor">
     <button class="circle-btn corner-tl" id="editorBackBtn" title="Назад">←</button>
 
@@ -66,21 +66,13 @@
   <!-- ================= ЭКРАН 4: заучивание ================= -->
   <div class="screen" id="screenStudy">
     <div class="counter" id="studyCounter">Выучено 0% • 0/0</div>
-
     <button class="circle-btn corner-tl" id="studyBackBtn" title="Назад">←</button>
 
-    <div class="study-face" id="studyFace"></div>
-
-    <div class="study-hidden" id="studyHidden">
-      <div class="study-divider"></div>
-      <div class="study-back" id="studyBack"></div>
-    </div>
-
-    <div class="button-area">
-      <button class="btn" id="showAnswerBtn">Показать ответ</button>
-      <div id="answer-buttons">
-        <button class="btn answer-btn" id="wrongBtn">Неверно</button>
-        <button class="btn answer-btn" id="rightBtn">Верно</button>
+    <div class="card-scroll">
+      <div class="study-face" id="studyFace"></div>
+      <div class="study-hidden" id="studyHidden">
+        <div class="study-divider"></div>
+        <div class="study-back" id="studyBack"></div>
       </div>
     </div>
 
@@ -90,27 +82,38 @@
   <!-- ================= ЭКРАН 5: контрольный тест ================= -->
   <div class="screen" id="screenTest">
     <div class="counter" id="testCounter">Отвечено 0/0</div>
-
     <button class="circle-btn corner-tl" id="testBackBtn" title="Назад">←</button>
 
     <div class="test-round-label hidden" id="testRoundLabel">Прогон неправильных</div>
 
-    <div class="study-face" id="testFace"></div>
-
-    <div class="study-hidden" id="testHidden">
-      <div class="study-divider"></div>
-      <div class="study-back" id="testBack"></div>
-    </div>
-
-    <div class="button-area">
-      <button class="btn" id="testShowAnswerBtn">Показать ответ</button>
-      <div id="test-answer-buttons">
-        <button class="btn answer-btn" id="testWrongBtn">Неверно</button>
-        <button class="btn answer-btn" id="testRightBtn">Верно</button>
+    <div class="card-scroll">
+      <div class="study-face" id="testFace"></div>
+      <div class="study-hidden" id="testHidden">
+        <div class="study-divider"></div>
+        <div class="study-back" id="testBack"></div>
       </div>
     </div>
 
     <div id="testFeedbackIcon" class="feedback-icon"></div>
+  </div>
+
+  <!-- =========================================================
+       ПАНЕЛИ КНОПОК — ВНЕ .screen, fixed к viewport
+       ========================================================= -->
+  <div class="button-area" id="studyButtonArea">
+    <button class="btn" id="showAnswerBtn">Показать ответ</button>
+    <div id="answer-buttons">
+      <button class="btn answer-btn" id="wrongBtn">Неверно</button>
+      <button class="btn answer-btn" id="rightBtn">Верно</button>
+    </div>
+  </div>
+
+  <div class="button-area" id="testButtonArea">
+    <button class="btn" id="testShowAnswerBtn">Показать ответ</button>
+    <div id="test-answer-buttons">
+      <button class="btn answer-btn" id="testWrongBtn">Неверно</button>
+      <button class="btn answer-btn" id="testRightBtn">Верно</button>
+    </div>
   </div>
 
   <!-- ================= МОДАЛКА: имя колоды ================= -->
@@ -149,7 +152,7 @@
     </div>
   </div>
 
-  <!-- ================= УВЕДОМЛЕНИЕ: всё выучено (авто-переход) ================= -->
+  <!-- ================= УВЕДОМЛЕНИЕ: всё выучено ================= -->
   <div class="modal-overlay" id="allLearnedOverlay">
     <div class="modal modal-notice">
       <h2>Всё выучено</h2>
