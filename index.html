@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Формула</title>
+
+<script>
+  MathJax = {
+    tex: { inlineMath: [['\\(', '\\)']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ================= ЭКРАН 1: основное меню (стартовый) ================= -->
+  <div class="screen active" id="screenMenu">
+    <div class="bg-text" id="menuBgText">Добавьте колоду</div>
+    <div class="decks-list hidden" id="decksList"></div>
+    <button class="circle-btn corner-br" id="addBtn" title="Добавить">+</button>
+  </div>
+
+  <!-- ================= ЭКРАН 2: редактор карточек (создание/изменение) ================= -->
+  <div class="screen" id="screenEditor">
+    <button class="circle-btn corner-tl" id="editorBackBtn" title="Назад">←</button>
+
+    <div class="import-wrapper">
+      <textarea id="editorText" spellcheck="false"
+        placeholder="Вставьте сюда карточки в формате:
+Вопрос 1
+---
+Ответ 1
+===
+Вопрос 2
+---
+Ответ 2
+..."></textarea>
+
+      <div class="import-status" id="editorStatus"></div>
+
+      <div class="import-actions">
+        <button class="btn btn-primary" id="editorSaveBtn">Сохранить колоду</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ЭКРАН 3: меню колоды ================= -->
+  <div class="screen" id="screenDeckMenu">
+    <div class="counter" id="deckMenuCounter">Выучено 0% • 0/0</div>
+
+    <div class="create-buttons">
+      <button class="btn" id="studyBtn">Заучивание</button>
+      <button class="btn" id="testBtn">Контрольный тест</button>
+      <button class="btn" id="renameDeckBtn">Переименовать</button>
+      <button class="btn" id="editDeckBtn">Изменить</button>
+      <button class="btn btn-danger" id="resetProgressBtn">Сбросить прогресс</button>
+      <button class="btn btn-danger" id="deleteDeckBtn">Удалить колоду</button>
+    </div>
+    <button class="circle-btn corner-tl" id="deckMenuBackBtn" title="Назад">←</button>
+  </div>
+
+  <!-- ================= ЭКРАН 4: заучивание ================= -->
+  <div class="screen" id="screenStudy">
+    <div class="counter" id="studyCounter">Выучено 0% • 0/0</div>
+
+    <button class="circle-btn corner-tl" id="studyBackBtn" title="Назад">←</button>
+
+    <div class="study-face" id="studyFace"></div>
+
+    <div class="study-hidden" id="studyHidden">
+      <div class="study-divider"></div>
+      <div class="study-back" id="studyBack"></div>
+    </div>
+
+    <div class="button-area">
+      <button class="btn" id="showAnswerBtn">Показать ответ</button>
+      <div id="answer-buttons">
+        <button class="btn answer-btn" id="wrongBtn">Неверно</button>
+        <button class="btn answer-btn" id="rightBtn">Верно</button>
+      </div>
+    </div>
+
+    <div id="feedbackIcon" class="feedback-icon"></div>
+  </div>
+
+  <!-- ================= ЭКРАН 5: контрольный тест ================= -->
+  <div class="screen" id="screenTest">
+    <div class="counter" id="testCounter">Отвечено 0/0</div>
+
+    <button class="circle-btn corner-tl" id="testBackBtn" title="Назад">←</button>
+
+    <div class="test-round-label hidden" id="testRoundLabel">Прогон неправильных</div>
+
+    <div class="study-face" id="testFace"></div>
+
+    <div class="study-hidden" id="testHidden">
+      <div class="study-divider"></div>
+      <div class="study-back" id="testBack"></div>
+    </div>
+
+    <div class="button-area">
+      <button class="btn" id="testShowAnswerBtn">Показать ответ</button>
+      <div id="test-answer-buttons">
+        <button class="btn answer-btn" id="testWrongBtn">Неверно</button>
+        <button class="btn answer-btn" id="testRightBtn">Верно</button>
+      </div>
+    </div>
+
+    <div id="testFeedbackIcon" class="feedback-icon"></div>
+  </div>
+
+  <!-- ================= МОДАЛКА: имя колоды ================= -->
+  <div class="modal-overlay" id="deckNameOverlay">
+    <div class="modal">
+      <h2 id="deckNameTitle">Название колоды</h2>
+      <input type="text" id="deckNameInput" placeholder="например, Формулы физики" autocomplete="off">
+      <div class="modal-actions">
+        <button class="btn" id="deckNameCancel">Отмена</button>
+        <button class="btn btn-primary" id="deckNameSave">Сохранить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= МОДАЛКА: сброс прогресса ================= -->
+  <div class="modal-overlay" id="resetOverlay">
+    <div class="modal">
+      <h2>Сбросить прогресс?</h2>
+      <p class="notice-sub">Все карточки станут новыми. Это действие нельзя отменить.</p>
+      <div class="modal-actions">
+        <button class="btn" id="resetCancel">Отмена</button>
+        <button class="btn btn-danger" id="resetConfirm">Сбросить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= МОДАЛКА: удаление колоды ================= -->
+  <div class="modal-overlay" id="deleteOverlay">
+    <div class="modal">
+      <h2>Удалить колоду?</h2>
+      <p class="notice-sub">Колода и весь прогресс будут удалены. Это действие нельзя отменить.</p>
+      <div class="modal-actions">
+        <button class="btn" id="deleteCancel">Отмена</button>
+        <button class="btn btn-danger" id="deleteConfirm">Удалить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= УВЕДОМЛЕНИЕ: всё выучено (авто-переход) ================= -->
+  <div class="modal-overlay" id="allLearnedOverlay">
+    <div class="modal modal-notice">
+      <h2>Всё выучено</h2>
+      <p class="notice-sub">Все карточки в этой колоде выучены.</p>
+    </div>
+  </div>
+
+  <!-- ================= МОДАЛКА: заучивание заблокировано ================= -->
+  <div class="modal-overlay" id="studyLockedOverlay">
+    <div class="modal">
+      <h2>Всё выучено</h2>
+      <p class="notice-sub">Сбросьте прогресс, чтобы повторить карточки.</p>
+      <div class="modal-actions">
+        <button class="btn" id="studyLockedCancel">Отмена</button>
+        <button class="btn btn-danger" id="studyLockedReset">Сбросить прогресс</button>
+      </div>
+    </div>
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>
