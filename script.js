@@ -76,9 +76,17 @@ const screens = {
   study:  document.getElementById('screenStudy'),
   test:   document.getElementById('screenTest')
 };
+
+const studyButtonArea = document.getElementById('studyButtonArea');
+const testButtonArea = document.getElementById('testButtonArea');
+
 function showScreen(name) {
   Object.values(screens).forEach(s => s.classList.remove('active'));
   screens[name].classList.add('active');
+
+  // Панели кнопок — только для заучивания / теста
+  studyButtonArea.classList.toggle('active', name === 'study');
+  testButtonArea.classList.toggle('active', name === 'test');
 }
 
 /* =========================================================
@@ -594,7 +602,6 @@ function startStudy() {
   const deck = getDeck();
   if (!deck) return;
 
-  // Если всё уже выучено — предлагаем сбросить прогресс
   if (isDeckFullyLearned(deck)) {
     studyLockedOverlay.classList.add('active');
     return;
@@ -681,7 +688,6 @@ function startTest() {
 function showNextTestCard() {
   if (testQueue.length === 0) {
     if (testWrongQueue.length === 0) {
-      // Тест полностью пройден без ошибок — «Всё выучено» и на главную
       testFace.innerHTML = '';
       testHidden.classList.remove('show');
       testHidden.classList.add('instant-hide');
