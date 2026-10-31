@@ -15,7 +15,7 @@ body {
   line-height: 1.6;
   min-height: 100vh;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;          /* было overflow: hidden — убрали, чтобы разрешить прокрутку */
 }
 
 button { font-family: inherit; }
@@ -29,7 +29,10 @@ button { font-family: inherit; }
   justify-content: center;
   align-items: center;
   padding: 24px;
+  padding-bottom: 140px;        /* место под фиксированные кнопки внизу */
   box-sizing: border-box;
+  overflow-y: auto;             /* прокрутка контента, если не помещается */
+  -webkit-overflow-scrolling: touch;
 }
 .screen.active { display: flex; }
 
@@ -82,9 +85,9 @@ button { font-family: inherit; }
 .circle-btn:hover { background: #404144; box-shadow: 0 0 0 3px rgba(255,255,255,0.06); }
 .circle-btn:active { transform: scale(0.97); }
 
-.corner-tl { top: 20px; left: 20px; }
-.corner-tr { top: 20px; right: 20px; }
-.corner-br { bottom: 20px; right: 20px; }
+.corner-tl { top: calc(20px + env(safe-area-inset-top, 0px)); left: 20px; }
+.corner-tr { top: calc(20px + env(safe-area-inset-top, 0px)); right: 20px; }
+.corner-br { bottom: calc(20px + env(safe-area-inset-bottom, 0px)); right: 20px; }
 
 /* ---------- Фоновая надпись ---------- */
 .bg-text {
@@ -99,7 +102,7 @@ button { font-family: inherit; }
 /* ---------- Счётчик ---------- */
 .counter {
   position: fixed;
-  top: 24px;
+  top: calc(24px + env(safe-area-inset-top, 0px));
   left: 0;
   right: 0;
   text-align: center;
@@ -319,7 +322,7 @@ button { font-family: inherit; }
 
 .test-round-label {
   position: fixed;
-  top: 56px;
+  top: calc(56px + env(safe-area-inset-top, 0px));
   left: 0;
   right: 0;
   text-align: center;
@@ -328,16 +331,19 @@ button { font-family: inherit; }
   pointer-events: none;
 }
 
+/* ---------- Нижняя панель кнопок — FIXED, всегда видна ---------- */
 .button-area {
-  position: absolute;
-  bottom: 40px;
+  position: fixed;
   left: 0;
   right: 0;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
   display: flex;
   justify-content: center;
   gap: 20px;
   padding: 0 16px;
+  z-index: 90;
 }
+.button-area > * { pointer-events: auto; }
 
 #answer-buttons {
   display: none;
@@ -395,14 +401,19 @@ button { font-family: inherit; }
 @media (max-width: 600px) {
   body { font-size: 17px; }
 
-  .screen { padding: 16px; }
+  .screen {
+    padding: 16px;
+    padding-bottom: 130px;      /* место под фиксированные кнопки */
+    justify-content: flex-start; /* контент сверху, прокручивается */
+    padding-top: 70px;           /* место под счётчик */
+  }
 
-  .counter { font-size: 17px; top: 16px; }
+  .counter { font-size: 17px; top: calc(16px + env(safe-area-inset-top, 0px)); }
   .bg-text { font-size: 19px; }
 
   .circle-btn { width: 36px; height: 36px; font-size: 16px; }
-  .corner-tl { top: 14px; left: 14px; }
-  .corner-br { bottom: 14px; right: 14px; }
+  .corner-tl { top: calc(14px + env(safe-area-inset-top, 0px)); left: 14px; }
+  .corner-br { bottom: calc(14px + env(safe-area-inset-bottom, 0px)); right: 14px; }
 
   .btn { font-size: 15px; height: 42px; padding: 0 20px; }
 
@@ -417,11 +428,17 @@ button { font-family: inherit; }
   .study-face, .study-back { font-size: 18px; }
   .study-divider { margin: 18px auto; width: 240px; }
 
-  .button-area { bottom: 24px; gap: 12px; padding: 0 12px; }
+  .button-area {
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    gap: 12px;
+    padding: 0 12px;
+  }
   .answer-btn, #test-answer-buttons .btn { min-width: 0; flex: 1; }
 
   #editorText { min-height: 240px; font-size: 13px; }
   .modal { padding: 20px; }
   .modal-actions .btn { min-width: 90px; }
   .feedback-icon { font-size: 160px; }
+
+  .test-round-label { top: calc(44px + env(safe-area-inset-top, 0px)); font-size: 13px; }
 }
